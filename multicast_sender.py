@@ -26,9 +26,10 @@ if __name__ == "__main__":
     
     i = 0
     while True:
-        json_obj = {"counter": i}
+        json_obj = {"metricName": "RPM", "value": "2500"}
         json_string = json.dumps(json_obj)
         sender.send(json_string)
+        print("Sent at " + str(time.time()))
 
         i += 1
 
