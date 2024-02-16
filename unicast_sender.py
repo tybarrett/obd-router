@@ -4,13 +4,13 @@ import socket
 import json
 import time
 
-TARGET_IP = "192.168.1.151"
+TARGET_IP = "192.168.1.255"
 DEST_PORT = 8686
 
 TTL_LIMIT = 4
 
 
-class MulticastSender:
+class UnicastSender:
     def __init__(self):
         self.sock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
 
@@ -20,7 +20,7 @@ class MulticastSender:
 
 
 if __name__ == "__main__":
-    sender = MulticastSender()
+    sender = UnicastSender()
 
     i = 0
     while True:
