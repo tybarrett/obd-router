@@ -3,6 +3,10 @@
 import obd
 import time
 
+obd.logger.setLevel(obd.logging.DEBUG)
+ports = obd.scan_serial()
+print(ports)
+
 class ObdFetcher:
 
     def __init__(self):
