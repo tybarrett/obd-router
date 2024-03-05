@@ -4,7 +4,7 @@ import socket
 import json
 import time
 
-TARGET_IP = "192.168.50.255"
+TARGET_IP = "192.168.130.255"
 DEST_PORT = 8686
 
 TTL_LIMIT = 4

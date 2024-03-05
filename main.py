@@ -4,7 +4,7 @@ import time
 
 from unicast_sender import UnicastSender
 from obd_tester import ObdFetcher
-from obd_tester import MockObd 
+# from obd_tester import MockObd 
 
 
 if __name__ == "__main__":
