@@ -4,7 +4,7 @@ import socket
 import json
 import time
 
-TARGET_IP = "192.168.130.255"
+TARGET_IP = "192.168.251.255"
 DEST_PORT = 8686
 
 TTL_LIMIT = 4
@@ -19,6 +19,7 @@ class UnicastSender:
         print(outgoing_json)
         json_bytes = bytes(outgoing_json, "utf-8")
         self.sock.sendto(json_bytes, (TARGET_IP, DEST_PORT))
+        time.sleep(0.1)
 
 
 if __name__ == "__main__":
