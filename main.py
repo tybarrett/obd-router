@@ -37,3 +37,5 @@ if __name__ == "__main__":
         json_obj = {"metricName": "throttle", "value": throttle}
         json_string = json.dumps(json_obj)
         sender.send(json_string)
+
+        time.sleep(1)
