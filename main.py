@@ -8,7 +8,6 @@ print("Time to import json: " + str(time.time() - t_start))
 
 from unicast_sender import UnicastSender
 from obd_fetcher import ObdFetcher
-# from obd_tester import MockObd 
 
 
 if __name__ == "__main__":
