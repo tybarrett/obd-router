@@ -1,34 +1,48 @@
 """obd_tester.py - attempts to fetch OBD data from the vehicle."""
 
 import time
+import random
+from enum import Enum
+import types
 
-class MockObd:
 
-    def __init__(self):
-        # self.conn = obd.OBD()
+class commands(Enum):
+    SPEED = 1
+    RPM = 2
+    THROTTLE_POS = 3
+
+
+def randomize_delay(func):
+    def wrapper(*args, **kwargs):
+        sleep_time = random.random() * 0.5
+        time.sleep(sleep_time)
+        return func(*args, **kwargs)
+    return wrapper
+
+
+class OBD:
+
+    mocked_values = {
+        commands.SPEED: 60,
+        commands.RPM: 2000,
+        commands.THROTTLE_POS: 0.2,
+    }
+
+    def __init__(self, *args, **kwargs):
         pass
 
-    def fetch_speed(self):
-        # resp_obj = self.conn.query(obd.commands.SPEED)
-        return 1
+    def make_resp(self, value):
+        primitive_namespace = types.SimpleNamespace()
+        primitive_namespace.to = lambda _: value
 
-    def fetch_rpm(self):
-        # resp_obj = self.conn.query(obd.commands.RPM)
-        return 2000
+        o = types.SimpleNamespace()
+        o.value = primitive_namespace
+        return o
 
-    def fetch_gear(self):
-        # resp_obj = self.conn.query(obd.commands.SPEED)
-        return 3
+    @randomize_delay
+    def query(self, command):
+        if command in self.mocked_values:
+            return self.make_resp(self.mocked_values[command])
 
-    def fetch_throttle(self):
-        # resp_obj = self.conn.query(obd.commands.THROTTLE_POS)
-        return 0.5
-
-
-
-if __name__ == "__main__":
-    fetcher = MockObd()
-    while True:
-        print(fetcher.fetch_speed())
-
-        time.sleep(0.5)
+        else:
+            return self.make_resp(f"Unexpected command: {command=}")

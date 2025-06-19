@@ -2,29 +2,23 @@
 
 import time
 import os
-import sys
 
-print("Path variable: " + str(sys.path))
+if "MOCK_OBD" in os.environ:
+    print("Importing our obd mock module")
+    import mock_obd as obd
+else:
+    print("Starting to import obd at " + str(time.time()))
+    t_start = time.time()
+    import obd
+    print("Time to import obd: " + str(time.time() - t_start))
 
-#t_start = time.time()
-#import pint
-#print("Time to import pint: " + str(time.time() - t_start))
-
-print("Starting to import obd at " + str(time.time()))
-t_start = time.time()
-import obd
-print("Time to import obd: " + str(time.time() - t_start))
-
-#obd.logger.setLevel(obd.logging.DEBUG)
-#ports = obd.scan_serial()
-#print(ports)
 
 class ObdFetcher:
 
     def __init__(self):
-        while not os.path.exists("/dev/rfcomm0"):
-            print("rfcomm0 does not exist yet.")
-            time.sleep(0.5)
+        # while not os.path.exists("/dev/rfcomm0"):
+        #     print("rfcomm0 does not exist yet.")
+        #     time.sleep(0.5)
         self.conn = obd.OBD(portstr="/dev/rfcomm0", baudrate=115200)
 
     def fetch_speed(self):
