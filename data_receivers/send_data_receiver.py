@@ -17,7 +17,6 @@ class SendDataReceiver:
         ]
 
         for obj in json_objs:
-            print(obj)
             self.sender.send(json.dumps(obj))
 
             # Rate-limit outgoing traffic bc of bandwidth concerns
