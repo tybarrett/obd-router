@@ -14,10 +14,15 @@ class commands(Enum):
 
 def randomize_delay(func):
     def wrapper(*args, **kwargs):
-        sleep_time = random.random() * 0.5
+        sleep_time = random.random() * 0.2
         time.sleep(sleep_time)
         return func(*args, **kwargs)
     return wrapper
+
+
+def noisify(true_value):
+    random_proportion = 0.4 * random.random() + 0.8
+    return true_value * random_proportion
 
 
 class OBD:
@@ -33,7 +38,7 @@ class OBD:
 
     def make_resp(self, value):
         primitive_namespace = types.SimpleNamespace()
-        primitive_namespace.to = lambda _: value
+        primitive_namespace.to = lambda _: noisify(value)
 
         o = types.SimpleNamespace()
         o.value = primitive_namespace

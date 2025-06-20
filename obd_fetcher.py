@@ -32,7 +32,7 @@ class ObdFetcher:
     def fetch_gear(self):
         resp_obj = self.conn.query(obd.commands.SPEED)
         if resp_obj.value:
-            return resp_obj.value.to("mph") / 10 # Small workaround
+            return int(resp_obj.value.to("mph") / 10) # Small workaround
         else:
             return None
 
