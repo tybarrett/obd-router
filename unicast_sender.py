@@ -16,10 +16,8 @@ class UnicastSender:
         self.sock.setsockopt(socket.SOL_SOCKET, socket.SO_BROADCAST, 1)
 
     def send(self, outgoing_json):
-        print(outgoing_json)
         json_bytes = bytes(outgoing_json, "utf-8")
         self.sock.sendto(json_bytes, (TARGET_IP, DEST_PORT))
-        time.sleep(0.1)
 
 
 if __name__ == "__main__":
