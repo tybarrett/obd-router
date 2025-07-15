@@ -20,3 +20,6 @@ class SpotifyStatus:
              "time_in_song": self.time_in_song}
 
         return json.dumps(d)
+
+    def __str__(self):
+        return self.to_json()
