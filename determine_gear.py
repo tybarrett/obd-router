@@ -11,6 +11,6 @@ def determine_gear(rpm, speed_mph):
     for gear_num, ratio in enumerate(ZN6_GEAR_RATIOS):
         diff = abs(ratio - calculated_gear_ratio)
         if diff < GEAR_RATIO_DIFF_THRESHOLD:
-            return gear_num
+            return str(gear_num)
     else:
         return "N"

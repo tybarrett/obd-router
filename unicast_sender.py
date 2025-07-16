@@ -4,7 +4,18 @@ import socket
 import json
 import time
 
-TARGET_IP = "192.168.172.255"
+from get_current_ip import get_current_ip
+
+current_ip = get_current_ip()
+while not current_ip:
+    print("IP has not been assigned yet...")
+    time.sleep(0.5)
+    current_ip = get_current_ip()
+subnet_octets = current_ip.split(".")[:-1]
+subnet_octets.append("26")
+
+TARGET_IP = ".".join(subnet_octets)
+print(TARGET_IP)
 DEST_PORT = 8686
 
 TTL_LIMIT = 4
@@ -17,7 +28,11 @@ class UnicastSender:
 
     def send(self, outgoing_json):
         json_bytes = bytes(outgoing_json, "utf-8")
-        self.sock.sendto(json_bytes, (TARGET_IP, DEST_PORT))
+        try:
+            self.sock.sendto(json_bytes, (TARGET_IP, DEST_PORT))
+        except:
+            pass
+        time.sleep(0.1)
 
 
 if __name__ == "__main__":

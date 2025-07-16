@@ -16,10 +16,10 @@ else:
 class ObdFetcher:
 
     def __init__(self):
-        # while not os.path.exists("/dev/rfcomm0"):
-        #     print("rfcomm0 does not exist yet.")
-        #     time.sleep(0.5)
-        self.conn = obd.OBD(portstr="/dev/rfcomm0", baudrate=115200)
+#        while not os.path.exists("/dev/rfcomm0"):
+#            print("rfcomm0 does not exist yet.")
+#            time.sleep(0.5)
+        self.conn = obd.OBD()
 
     def fetch_speed(self):
         resp_obj = self.conn.query(obd.commands.SPEED)
