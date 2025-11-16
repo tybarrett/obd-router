@@ -23,22 +23,22 @@ class ObdFetcher:
 
     def fetch_speed(self):
         resp_obj = self.conn.query(obd.commands.SPEED)
-        return resp_obj.value.to("mph")
+        return float(resp_obj.value.to("mph").magnitude)
 
     def fetch_rpm(self):
         resp_obj = self.conn.query(obd.commands.RPM)
-        return resp_obj.value.to("rpm")
+        return float(resp_obj.value.to("rpm").magnitude)
 
     def fetch_gear(self):
         resp_obj = self.conn.query(obd.commands.SPEED)
         if resp_obj.value:
-            return int(resp_obj.value.to("mph") / 10) # Small workaround
+            return int(resp_obj.value.to("mph").magnitude / 10) # Small workaround
         else:
             return None
 
     def fetch_throttle(self):
         resp_obj = self.conn.query(obd.commands.THROTTLE_POS)
-        return resp_obj.value.to("")
+        return resp_obj.value.to("").magnitude
 
 
 

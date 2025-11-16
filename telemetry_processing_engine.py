@@ -35,9 +35,13 @@ class TelemetryProcessingEngine:
 
     def _get_and_process_data(self):
         speed = self.obd.fetch_speed()
+        print(speed)
         rpm = self.obd.fetch_rpm()
+        print(rpm)
         gear = self.obd.fetch_gear()
+        print(gear)
         throttle = self.obd.fetch_throttle()
+        print(throttle)
 
         json_obj = {
             "speed": speed,
@@ -45,6 +49,7 @@ class TelemetryProcessingEngine:
             "gear": gear,
             "throttle": throttle
         }
+        print(json_obj)
 
         for receiver in self.data_receivers:
             receiver.ingest(json_obj)
