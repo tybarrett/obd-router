@@ -2,12 +2,18 @@
 
 from flask import Flask, send_file, request, redirect
 import json
+import socket
 
 app = Flask(__name__)
 
 @app.route("/")
 def index():
     print(f"{request.args.to_dict()=}")
+
+    with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s:
+        s.connect(("127.0.0.1", 8687))
+        s.sendall(b"") # TODO
+
     return {}
 
 

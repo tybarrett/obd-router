@@ -14,6 +14,17 @@ Plan for getting spotify auth details:
   - we will fail because we don't actually have a server that cares about this redirect
   - save the `code` parameter in an environment variable (or smth) for safekeeping
 - request an access token `accounts.spotify.com/api/token`
+
+Now action items are:
+- Start the spotify auth server
+- Generate the "request user authorization" URL
+- Go there in selenium
+- Log in if necessary
+- Click the button
+- Receive the new auth code in the server
+- Receive it in this spotify module
+- Wait for the auth code to updated to the latest
+- Finally make the real spotify request
 """
 
 
@@ -23,13 +34,13 @@ class SpotifyStatusFetcher:
     HEARTBEAT_URI = "spotify:track:4uWrIclvxHbzEQodrPmX7p"
 
     def __init__(self):
-
+        pass
 
     def generate_access_token(self):
         access_token_resp = requests.post("https://accounts.spotify.com/api/token",
                                          headers={"Content-Type": "application/x-www-form-urlencoded"},
-                                         json=f"grant_type=client_credentials&client_id={self.client_id}&client_secret={self.client_secret}")
-        print(access_token_resp.content)
+                                         json=f"grant_type=authorization_code&code={self.auth_token}&redirect_uri=http://localhost:3000")
+        print("Response: " + access_token_resp.content.decode("utf-8"))
 
         json_obj = json.loads(access_token_resp.content)
         return json_obj["access_token"]
@@ -60,7 +71,8 @@ class SpotifyStatusFetcher:
 
 if __name__ == "__main__":
     s = SpotifyStatusFetcher()
-    state = s.fetch_player_state()
-    print(state)
-    s.change_player_state(SpotifyStatusFetcher.KICKSTART_MY_HEART_URI)
-    print(s.fetch_player_state())
+    print(s.generate_access_token())
+    # state = s.fetch_player_state()
+    # print(state)
+    # s.change_player_state(SpotifyStatusFetcher.KICKSTART_MY_HEART_URI)
+    # print(s.fetch_player_state())
