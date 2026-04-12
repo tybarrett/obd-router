@@ -2,18 +2,9 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="dd7e4268-c5b7-4982-a976-06d3abc8efb1" name="Default Changelist" comment="">
-      <change afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/spotify/__init__.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/spotify/base64_encoding_scratch.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/spotify/dummy_spotify_server.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/.gitignore" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/inspectionProfiles/profiles_settings.xml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/modules.xml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/obd-router.iml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/vcs.xml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/models/spotify_status.py" beforeDir="false" afterPath="$PROJECT_DIR$/models/spotify_status.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/spotify_status_fetcher.py" beforeDir="false" afterPath="$PROJECT_DIR$/spotify/spotify_status_fetcher.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/spotify/dummy_spotify_server.py" beforeDir="false" afterPath="$PROJECT_DIR$/spotify/dummy_spotify_server.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/spotify/spotify_status_fetcher.py" beforeDir="false" afterPath="$PROJECT_DIR$/spotify/spotify_status_fetcher.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -194,5 +185,16 @@
       </map>
     </option>
     <option name="oldMeFiltersMigrated" value="true" />
+  </component>
+  <component name="XDebuggerManager">
+    <breakpoint-manager>
+      <breakpoints>
+        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
+          <url>file://$PROJECT_DIR$/spotify/spotify_status_fetcher.py</url>
+          <line>47</line>
+          <option name="timeStamp" value="1" />
+        </line-breakpoint>
+      </breakpoints>
+    </breakpoint-manager>
   </component>
 </project>
