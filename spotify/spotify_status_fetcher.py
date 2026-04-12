@@ -4,6 +4,8 @@ import dotenv
 
 import requests
 import json
+import base64
+import time
 
 from models.spotify_status import SpotifyStatus
 
@@ -24,10 +26,18 @@ class SpotifyStatusFetcher:
             self.refresh_token = refresh_token_fp.read()
 
 
+    def __encode_client_creds(self):
+        sample_string = self.client_id + ":" + self.client_secret
+        sample_string_bytes = sample_string.encode("ascii")
+
+        base64_bytes = base64.b64encode(sample_string_bytes)
+        return base64_bytes.decode("ascii")
+
+
     def __generate_access_token(self):
         access_token_resp = requests.post("https://accounts.spotify.com/api/token",
                                           headers={"Content-Type": "application/x-www-form-urlencoded",
-                                         json=f"grant_type=authorization_code&code={self.auth_token}&redirect_uri=http://localhost:3000")
+                                                   "Authorization": f"Basic {self.__encode_client_creds()}"},
                                           data={"grant_type": "refresh_token",
                                                 "refresh_token": self.refresh_token,
                                                 },
@@ -66,8 +76,8 @@ class SpotifyStatusFetcher:
 
 if __name__ == "__main__":
     s = SpotifyStatusFetcher()
-    print(s.generate_access_token())
-    # state = s.fetch_player_state()
-    # print(state)
-    # s.change_player_state(SpotifyStatusFetcher.KICKSTART_MY_HEART_URI)
-    # print(s.fetch_player_state())
+    print(s.fetch_player_state())
+    time.sleep(5)
+    s.change_player_state(SpotifyStatusFetcher.HEARTBEAT_URI)
+    time.sleep(5)
+    print(s.fetch_player_state())
