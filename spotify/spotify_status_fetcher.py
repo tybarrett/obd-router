@@ -1,31 +1,11 @@
 """spotify_status_fetcher.py - fetches the current state of my Spotify player."""
-
+import os
+import dotenv
 
 import requests
 import json
 
 from models.spotify_status import SpotifyStatus
-
-"""
-Plan for getting spotify auth details:
-- generate the "request User Authorization" url ourselves
-- go there in a browser
-- when we try (and fail) the redirect, grab the url it tried to use
-  - we will fail because we don't actually have a server that cares about this redirect
-  - save the `code` parameter in an environment variable (or smth) for safekeeping
-- request an access token `accounts.spotify.com/api/token`
-
-Now action items are:
-- Start the spotify auth server
-- Generate the "request user authorization" URL
-- Go there in selenium
-- Log in if necessary
-- Click the button
-- Receive the new auth code in the server
-- Receive it in this spotify module
-- Wait for the auth code to updated to the latest
-- Finally make the real spotify request
-"""
 
 
 class SpotifyStatusFetcher:
@@ -34,12 +14,24 @@ class SpotifyStatusFetcher:
     HEARTBEAT_URI = "spotify:track:4uWrIclvxHbzEQodrPmX7p"
 
     def __init__(self):
-        pass
+        self.access_token = None
+        dotenv.load_dotenv()
+        self.auth_token = os.getenv("SPOTIFY_AUTH_TOKEN")
+        self.client_id = os.getenv("SPOTIFY_CLIENT_ID")
+        self.client_secret = os.getenv("SPOTIFY_CLIENT_SECRET")
 
-    def generate_access_token(self):
+        with open("refresh_token.txt", "r") as refresh_token_fp:
+            self.refresh_token = refresh_token_fp.read()
+
+
+    def __generate_access_token(self):
         access_token_resp = requests.post("https://accounts.spotify.com/api/token",
-                                         headers={"Content-Type": "application/x-www-form-urlencoded"},
+                                          headers={"Content-Type": "application/x-www-form-urlencoded",
                                          json=f"grant_type=authorization_code&code={self.auth_token}&redirect_uri=http://localhost:3000")
+                                          data={"grant_type": "refresh_token",
+                                                "refresh_token": self.refresh_token,
+                                                },
+                                          )
         print("Response: " + access_token_resp.content.decode("utf-8"))
 
         json_obj = json.loads(access_token_resp.content)
@@ -47,7 +39,9 @@ class SpotifyStatusFetcher:
 
 
     def fetch_player_state(self):
-        response = requests.get("https://api.spotify.com/v1/me/player", headers={"Authorization": "Bearer " + self.access_token})
+        access_token = self.__generate_access_token()
+        response = requests.get("https://api.spotify.com/v1/me/player",
+                                headers={"Authorization": "Bearer " + access_token})
 
         if not response.content:
             return None
@@ -63,9 +57,10 @@ class SpotifyStatusFetcher:
 
 
     def change_player_state(self, spotify_uri):
+        access_token = self.__generate_access_token()
         response = requests.put("https://api.spotify.com/v1/me/player/play",
                                 json.dumps({"uris": [spotify_uri]}),
-                                headers={"Authorization": "Bearer " + self.access_token})
+                                headers={"Authorization": "Bearer " + access_token})
         print(response)
 
 
