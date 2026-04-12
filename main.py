@@ -9,9 +9,10 @@ def main():
         SendDataReceiver()
     )
 
-    tpe.register_data_receiver(
-        LogDataReceiver()
-    )
+    # TODO - uncomment this when we want to record data
+    # tpe.register_data_receiver(
+    #     LogDataReceiver()
+    # )
 
     tpe.spin()
 

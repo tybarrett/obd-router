@@ -4,6 +4,7 @@
 import time
 
 from obd_fetcher import ObdFetcher
+from spotify.spotify_status_fetcher import SpotifyStatusFetcher
 
 # TODO - rate limit how fast TPE spins?
 # TODO - abstract away the specific OBD calls
@@ -17,6 +18,7 @@ class TelemetryProcessingEngine:
         self.is_running = True
 
         self.obd = ObdFetcher()
+        self.spotify = SpotifyStatusFetcher()
 
     def register_data_receiver(self, data_receiver):
         self.data_receivers.append(data_receiver)
@@ -44,6 +46,7 @@ class TelemetryProcessingEngine:
         print(throttle)
 
         json_obj = {
+            "__TYPE": "telemetry",
             "speed": speed,
             "rpm": rpm,
             "gear": gear,
@@ -53,3 +56,9 @@ class TelemetryProcessingEngine:
 
         for receiver in self.data_receivers:
             receiver.ingest(json_obj)
+
+        spotify_state = self.spotify.fetch_player_state()
+        spotify_state_json = spotify_state.to_json()
+        spotify_state_json["__TYPE"] = "spotify"
+        for receiver in self.data_receivers:
+            receiver.ingest(spotify_state_json)

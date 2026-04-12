@@ -19,6 +19,9 @@ class LogDataReceiver:
         )
 
     def ingest(self, data_packet):
+        if data_packet["__TYPE"].lower() != "telemetry":
+            return
+
         now = datetime.datetime.now().strftime(DATETIME_FORMAT)
         data_packet["_timestamp"] = now
         json_str = json.dumps(data_packet)

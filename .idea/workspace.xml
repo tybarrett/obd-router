@@ -1,10 +1,16 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
+  <component name="AutoImportSettings">
+    <option name="autoReloadType" value="SELECTIVE" />
+  </component>
   <component name="ChangeListManager">
-    <list default="true" id="dd7e4268-c5b7-4982-a976-06d3abc8efb1" name="Default Changelist" comment="">
+    <list default="true" id="bff53778-b18c-464f-85a4-9b94e90b15de" name="Default Changelist" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/data_receivers/log_data_receiver.py" beforeDir="false" afterPath="$PROJECT_DIR$/data_receivers/log_data_receiver.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/data_receivers/send_data_receiver.py" beforeDir="false" afterPath="$PROJECT_DIR$/data_receivers/send_data_receiver.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/main.py" beforeDir="false" afterPath="$PROJECT_DIR$/main.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/spotify/dummy_spotify_server.py" beforeDir="false" afterPath="$PROJECT_DIR$/spotify/dummy_spotify_server.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/spotify/spotify_status_fetcher.py" beforeDir="false" afterPath="$PROJECT_DIR$/spotify/spotify_status_fetcher.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/telemetry_processing_engine.py" beforeDir="false" afterPath="$PROJECT_DIR$/telemetry_processing_engine.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -39,7 +45,14 @@
     <property name="RunOnceActivity.OpenProjectViewOnStart" value="true" />
     <property name="RunOnceActivity.ShowReadmeOnStart" value="true" />
     <property name="last_opened_file_path" value="$PROJECT_DIR$" />
-    <property name="settings.editor.selected.configurable" value="com.jetbrains.python.configuration.PythonContentEntriesConfigurable" />
+    <property name="settings.editor.selected.configurable" value="com.jetbrains.python.configuration.PyActiveSdkModuleConfigurable" />
+  </component>
+  <component name="PyConsoleOptionsProvider">
+    <option name="myPythonConsoleState">
+      <console-settings sdk-home="C:\Users\tyler\Documents\dev\obd-router\venv\Scripts\python.exe">
+        <option name="mySdkHome" value="C:\Users\tyler\Documents\dev\obd-router\venv\Scripts\python.exe" />
+      </console-settings>
+    </option>
   </component>
   <component name="RecentsManager">
     <key name="MoveFile.RECENT_KEYS">
@@ -153,6 +166,13 @@
       <option name="INPUT_FILE" value="" />
       <method v="2" />
     </configuration>
+    <list>
+      <item itemvalue="Python.base64_encoding_scratch" />
+      <item itemvalue="Python.dummy_spotify_server" />
+      <item itemvalue="Python.log_data_receiver" />
+      <item itemvalue="Python.main" />
+      <item itemvalue="Python.spotify_status_fetcher" />
+    </list>
     <recent_temporary>
       <list>
         <item itemvalue="Python.spotify_status_fetcher" />
@@ -166,7 +186,7 @@
   <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="true" />
   <component name="TaskManager">
     <task active="true" id="Default" summary="Default task">
-      <changelist id="dd7e4268-c5b7-4982-a976-06d3abc8efb1" name="Default Changelist" comment="" />
+      <changelist id="bff53778-b18c-464f-85a4-9b94e90b15de" name="Default Changelist" comment="" />
       <created>1707792157220</created>
       <option name="number" value="Default" />
       <option name="presentableId" value="Default" />

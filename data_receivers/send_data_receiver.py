@@ -11,13 +11,4 @@ class SendDataReceiver:
         self.sender = UnicastSender()
 
     def ingest(self, data):
-        json_objs = [
-            {"metricName": key, "value": value}
-            for key, value in data.items()
-        ]
-
-        for obj in json_objs:
-            self.sender.send(json.dumps(obj))
-
-            # Rate-limit outgoing traffic bc of bandwidth concerns
-            time.sleep(0.1)
+        self.sender.send(json.dumps(data))
