@@ -58,7 +58,7 @@ class TelemetryProcessingEngine:
             receiver.ingest(json_obj)
 
         spotify_state = self.spotify.fetch_player_state()
-        spotify_state_json = spotify_state.to_json()
+        spotify_state_json = spotify_state.to_dict()
         spotify_state_json["__TYPE"] = "spotify"
         for receiver in self.data_receivers:
             receiver.ingest(spotify_state_json)

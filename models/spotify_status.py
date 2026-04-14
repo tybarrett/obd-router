@@ -12,14 +12,16 @@ class SpotifyStatus:
         self.song_length = song_length
         self.time_in_song = time_in_song
 
-    def to_json(self):
-        d = {"song_name": self.song_name,
+
+    def to_dict(self):
+        return {"song_name": self.song_name,
              "artist_name": self.artist_name,
              "album_name": self.album_name,
              "song_length": self.song_length,
              "time_in_song": self.time_in_song}
 
-        return json.dumps(d)
+    def to_json(self):
+        return json.dumps(self.to_dict())
 
     def __str__(self):
         return self.to_json()

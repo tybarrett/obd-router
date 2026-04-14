@@ -22,7 +22,7 @@ class SpotifyStatusFetcher:
         self.client_id = os.getenv("SPOTIFY_CLIENT_ID")
         self.client_secret = os.getenv("SPOTIFY_CLIENT_SECRET")
 
-        with open("refresh_token.txt", "r") as refresh_token_fp:
+        with open("spotify/refresh_token.txt", "r") as refresh_token_fp:
             self.refresh_token = refresh_token_fp.read()
 
 

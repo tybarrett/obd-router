@@ -4,12 +4,19 @@ import time
 import random
 from enum import Enum
 import types
+from dataclasses import dataclass
+from typing import Union
 
 
 class commands(Enum):
     SPEED = 1
     RPM = 2
     THROTTLE_POS = 3
+
+
+@dataclass
+class MockUnit:
+    magnitude: Union[float, int]
 
 
 def randomize_delay(func):
@@ -38,7 +45,7 @@ class OBD:
 
     def make_resp(self, value):
         primitive_namespace = types.SimpleNamespace()
-        primitive_namespace.to = lambda _: noisify(value)
+        primitive_namespace.to = lambda _: MockUnit(noisify(value))
 
         o = types.SimpleNamespace()
         o.value = primitive_namespace
