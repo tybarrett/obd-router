@@ -33,7 +33,7 @@ class UnicastSender:
             self.sock.sendto(json_bytes, (TARGET_IP, DEST_PORT))
         except:
             pass
-        time.sleep(0.1)
+        # time.sleep(0.1)
 
 
 if __name__ == "__main__":

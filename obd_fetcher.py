@@ -2,6 +2,7 @@
 
 import time
 import os
+from determine_gear import determine_gear
 
 if "MOCK_OBD" in os.environ:
     print("Importing our obd mock module")
@@ -15,6 +16,9 @@ else:
 
 class ObdFetcher:
 
+    self.rpm = 100
+    self.speed = 1
+
     def __init__(self):
 #        while not os.path.exists("/dev/rfcomm0"):
 #            print("rfcomm0 does not exist yet.")
@@ -23,18 +27,16 @@ class ObdFetcher:
 
     def fetch_speed(self):
         resp_obj = self.conn.query(obd.commands.SPEED)
-        return float(resp_obj.value.to("mph").magnitude)
+        self.speed = float(resp_obj.value.to("mph").magnitude)
+        return self.speed
 
     def fetch_rpm(self):
         resp_obj = self.conn.query(obd.commands.RPM)
-        return float(resp_obj.value.to("rpm").magnitude)
+        self.rpm = float(resp_obj.value.to("rpm").magnitude)
+        return self.rpm
 
     def fetch_gear(self):
-        resp_obj = self.conn.query(obd.commands.SPEED)
-        if resp_obj.value:
-            return int(resp_obj.value.to("mph").magnitude / 10) # Small workaround
-        else:
-            return None
+        return determine_gear(self.rpm, self.speed)
 
     def fetch_throttle(self):
         resp_obj = self.conn.query(obd.commands.THROTTLE_POS)

@@ -9,6 +9,8 @@ def determine_gear(rpm, speed_mph):
     # The speed-to-rpm ratio is constant at each gear.
     # We will calculate that ratio, try to relate it to our list of known ratios.
     # If it is close to a known ratio, we return that gear. Otherwise, "N".
+    if rpm == 0:
+        return "N"
     speed_over_rpm = speed_mph / rpm
     for i, ratio in enumerate(ZN6_GEAR_RATIOS):
         if abs(speed_over_rpm - ratio) < GEAR_RATIO_DIFF_THRESHOLD:
