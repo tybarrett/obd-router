@@ -1,57 +1,25 @@
+from data_pipeline import DataPipeline
+from data_sources.obd_data_source import OBDDataSource
+from data_sources.spotify_data_source import SpotifyDataSource
 from data_receivers.send_data_receiver import SendDataReceiver
-from telemetry_processing_engine import TelemetryProcessingEngine
-from data_receivers.log_data_receiver import LogDataReceiver
+
+# TODO - uncomment when recording is desired
+# from data_receivers.log_data_receiver import LogDataReceiver
 
 
 def main():
-    tpe = TelemetryProcessingEngine()
-    tpe.register_data_receiver(
-        SendDataReceiver()
-    )
+    pipeline = DataPipeline()
 
-    # TODO - uncomment this when we want to record data
-    # tpe.register_data_receiver(
-    #     LogDataReceiver()
-    # )
+    # --- Inputs (one background thread each) ---
+    pipeline.register_source(OBDDataSource(rate_limit_hz=2))
+    pipeline.register_source(SpotifyDataSource(rate_limit_hz=0.2))
 
-    tpe.spin()
+    # --- Outputs ---
+    pipeline.register_receiver(SendDataReceiver())
+    # pipeline.register_receiver(LogDataReceiver())
+
+    pipeline.spin()
 
 
 if __name__ == "__main__":
     main()
-
-
-#from unicast_sender import UnicastSender
-#from obd_tester import ObdFetcher
-#from determine_gear import *
-# from obd_tester import MockObd 
-
-
-#if __name__ == "__main__":
-#    sender = UnicastSender()
-#    obd = ObdFetcher()
-#
-#    while True:
-#        speed = obd.fetch_speed().magnitude
-#        json_obj = {"metricName": "speed", "value": int(speed)}
-#        json_string = json.dumps(json_obj)
-#        sender.send(json_string)
-#
-#        rpm = obd.fetch_rpm().magnitude
-#        json_obj = {"metricName": "RPM", "value": int(rpm)}
-#        json_string = json.dumps(json_obj)
-#        sender.send(json_string)
-#
-#        gear = determine_gear(rpm, speed)
-#        if gear == "N":
-#            gear = str(0)
-#        json_obj = {"metricName": "gear", "value": gear}
-#        json_string = json.dumps(json_obj)
-#        sender.send(json_string)
-#
-#        throttle = obd.fetch_throttle().magnitude
-#        json_obj = {"metricName": "throttle", "value": throttle}
-#        json_string = json.dumps(json_obj)
-#        sender.send(json_string)
-#
-#        #time.sleep(1)
