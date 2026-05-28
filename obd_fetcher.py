@@ -1,4 +1,4 @@
-"""obd_tester.py - attempts to fetch OBD data from the vehicle."""
+"""obd_fetcher.py - attempts to fetch OBD data from the vehicle."""
 
 import time
 import os
@@ -16,13 +16,10 @@ else:
 
 class ObdFetcher:
 
-    self.rpm = 100
-    self.speed = 1
-
     def __init__(self):
-#        while not os.path.exists("/dev/rfcomm0"):
-#            print("rfcomm0 does not exist yet.")
-#            time.sleep(0.5)
+        self.rpm = 100
+        self.speed = 1
+
         self.conn = obd.OBD()
 
     def fetch_speed(self):
@@ -43,10 +40,8 @@ class ObdFetcher:
         return resp_obj.value.to("").magnitude
 
 
-
 if __name__ == "__main__":
     fetcher = ObdFetcher()
     while True:
         print(fetcher.fetch_speed())
-
         time.sleep(0.5)

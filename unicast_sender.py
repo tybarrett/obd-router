@@ -3,8 +3,15 @@
 import socket
 import json
 import time
+import os
 
-from get_current_ip import get_current_ip
+
+def get_current_ip() -> str:
+    if "MOCK_OBD" in os.environ:
+        return "127.0.0.1"
+    else:
+        return os.popen("ifconfig wlan0 | grep 'inet ' | cut -d \" \" -f 10").read()
+
 
 current_ip = get_current_ip()
 while not current_ip:

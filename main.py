@@ -1,57 +1,60 @@
+import signal
+import sys
+
+from data_pipeline import DataPipeline
+from data_sources.obd_data_source import OBDDataSource
+from data_sources.spotify_data_source import SpotifyDataSource
 from data_receivers.send_data_receiver import SendDataReceiver
-from telemetry_processing_engine import TelemetryProcessingEngine
-from data_receivers.log_data_receiver import LogDataReceiver
+from switch_monitor import SwitchMonitor
+
+
+# TODO - uncomment when recording is desired
+# from data_receivers.log_data_receiver import LogDataReceiver
+
+
+# BCM-numbered GPIO pins, one per switch (indices 0-3).
+SWITCH_PINS = [17, 18, 27, 22]
 
 
 def main():
-    tpe = TelemetryProcessingEngine()
-    tpe.register_data_receiver(
-        SendDataReceiver()
-    )
+    pipeline = DataPipeline()
 
-    # TODO - uncomment this when we want to record data
-    # tpe.register_data_receiver(
-    #     LogDataReceiver()
-    # )
+    # --- Inputs (one background thread each) ---
+    pipeline.register_source(OBDDataSource(rate_limit_hz=2))
+    pipeline.register_source(SpotifyDataSource(rate_limit_hz=0.2))
 
-    tpe.spin()
+    # --- Outputs ---
+    pipeline.register_receiver(SendDataReceiver())
+    # pipeline.register_receiver(LogDataReceiver())
+
+    # --- Switch monitor ---
+    switches = SwitchMonitor(pins=SWITCH_PINS)
+
+    switches.on_switch_up(0, lambda: print("Switch 0 up"))
+    switches.on_switch_down(0, lambda: print("Switch 0 down"))
+
+    switches.on_switch_up(1, lambda: print("Switch 1 up"))
+    switches.on_switch_down(1, lambda: print("Switch 1 down"))
+
+    switches.on_switch_up(2, lambda: print("Switch 2 up"))
+    switches.on_switch_down(2, lambda: print("Switch 2 down"))
+
+    switches.on_switch_up(3, lambda: print("Switch 3 up"))
+    switches.on_switch_down(3, lambda: print("Switch 3 down"))
+
+    switches.start()
+
+    # Ensure GPIO is cleaned up on Ctrl-C or SIGTERM.
+    def _shutdown(sig, frame):
+        switches.stop()
+        pipeline.stop()
+        sys.exit(0)
+
+    signal.signal(signal.SIGINT, _shutdown)
+    signal.signal(signal.SIGTERM, _shutdown)
+
+    pipeline.spin()
 
 
 if __name__ == "__main__":
     main()
-
-
-#from unicast_sender import UnicastSender
-#from obd_tester import ObdFetcher
-#from determine_gear import *
-# from obd_tester import MockObd 
-
-
-#if __name__ == "__main__":
-#    sender = UnicastSender()
-#    obd = ObdFetcher()
-#
-#    while True:
-#        speed = obd.fetch_speed().magnitude
-#        json_obj = {"metricName": "speed", "value": int(speed)}
-#        json_string = json.dumps(json_obj)
-#        sender.send(json_string)
-#
-#        rpm = obd.fetch_rpm().magnitude
-#        json_obj = {"metricName": "RPM", "value": int(rpm)}
-#        json_string = json.dumps(json_obj)
-#        sender.send(json_string)
-#
-#        gear = determine_gear(rpm, speed)
-#        if gear == "N":
-#            gear = str(0)
-#        json_obj = {"metricName": "gear", "value": gear}
-#        json_string = json.dumps(json_obj)
-#        sender.send(json_string)
-#
-#        throttle = obd.fetch_throttle().magnitude
-#        json_obj = {"metricName": "throttle", "value": throttle}
-#        json_string = json.dumps(json_obj)
-#        sender.send(json_string)
-#
-#        #time.sleep(1)
