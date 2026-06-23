@@ -1,8 +1,12 @@
 """switch_monitor.py - Monitors a set of GPIO pins wired to physical switches.
 
-Each pin is expected to read HIGH (full voltage) when its switch is flipped up
-and LOW (no voltage) when flipped down. The Pi's internal pull-down resistors
-are enabled so floating pins are never misread as HIGH.
+Each input pin is expected to read HIGH (full voltage) when its switch is
+flipped up and LOW (no voltage) when flipped down. The Pi's internal pull-down
+resistors are enabled so floating pins are never misread as HIGH.
+
+Output pins are held at constant 3.3 V (HIGH) so they can act as a voltage
+source for the switch circuits. A switch wired between an output pin and an
+input pin will therefore drive that input HIGH when flipped up.
 
 Monitoring uses RPi.GPIO's interrupt-driven edge detection rather than polling.
 The kernel notifies us via epoll when a pin transitions, so no CPU cycles are
@@ -10,7 +14,10 @@ spent between switch events.
 
 Usage
 -----
-    monitor = SwitchMonitor(pins=[17, 18, 27, 22])
+    monitor = SwitchMonitor(
+        input_pins=[17, 18, 27, 22],
+        output_pins=[2, 3, 4, 14],   # held at 3.3 V; one per switch
+    )
 
     monitor.on_switch_up(0, lambda: print("Switch 0 flipped up"))
     monitor.on_switch_down(2, lambda: print("Switch 2 flipped down"))
@@ -39,33 +46,46 @@ _DEBOUNCE_MS = 50
 
 class SwitchMonitor:
     """
-    Monitors a fixed set of GPIO pins wired to physical switches and
+    Monitors a fixed set of GPIO input pins wired to physical switches and
     dispatches registered callbacks when a switch is flipped up or down.
+    Optionally holds a set of output pins at constant 3.3 V so they can
+    act as a voltage source for the switch circuits.
 
     Parameters
     ----------
-    pins : list[int]
+    input_pins : list[int]
         BCM-numbered GPIO pins to monitor, one per switch, in order.
         Switch indices used in on_switch_up/on_switch_down correspond
         to the position in this list (0-based).
+    output_pins : list[int]
+        BCM-numbered GPIO pins to configure as constant HIGH (3.3 V) outputs.
+        Intended to power the switch circuits: wire each output pin to one
+        side of a switch and the other side to the corresponding input pin.
+        No callbacks or indices are associated with these pins.
     debounce_ms : int
         Edge events within this many milliseconds of a prior event on the
         same pin are ignored. Prevents mechanical bounce from firing
         callbacks multiple times per flip.
     """
 
-    def __init__(self, pins: list[int], debounce_ms: int = _DEBOUNCE_MS):
-        if len(pins) == 0:
-            raise ValueError("At least one pin must be provided.")
+    def __init__(
+        self,
+        input_pins: list[int],
+        output_pins: list[int] = None,
+        debounce_ms: int = _DEBOUNCE_MS,
+    ):
+        if len(input_pins) == 0:
+            raise ValueError("At least one input pin must be provided.")
 
-        self._pins = pins
+        self._pins = input_pins
+        self._output_pins = output_pins or []
         self._debounce_ms = debounce_ms
         self._is_running = False
 
         # Two callback lists per switch: index 0 = on_up, index 1 = on_down.
         # Stored as {switch_index: {"up": [callbacks], "down": [callbacks]}}
         self._callbacks: dict[int, dict[str, list[Callable]]] = {
-            i: {"up": [], "down": []} for i in range(len(pins))
+            i: {"up": [], "down": []} for i in range(len(input_pins))
         }
 
         # Protects the callback dicts so they can be modified from any thread.
@@ -117,6 +137,10 @@ class SwitchMonitor:
 
         GPIO.setmode(GPIO.BCM)
 
+        for pin in self._output_pins:
+            GPIO.setup(pin, GPIO.OUT, initial=GPIO.HIGH)
+            logger.info("Output pin %d (BCM) set to constant HIGH (3.3 V)", pin)
+
         for switch_index, pin in enumerate(self._pins):
             # Pull-down: pin reads LOW when switch is open (down).
             GPIO.setup(pin, GPIO.IN, pull_up_down=GPIO.PUD_DOWN)
@@ -141,7 +165,7 @@ class SwitchMonitor:
             return
         for pin in self._pins:
             GPIO.remove_event_detect(pin)
-        GPIO.cleanup(self._pins)
+        GPIO.cleanup(self._pins + self._output_pins)
         self._is_running = False
         logger.info("SwitchMonitor stopped.")
 

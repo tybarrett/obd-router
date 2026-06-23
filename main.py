@@ -15,6 +15,11 @@ from switch_monitor import SwitchMonitor
 # BCM-numbered GPIO pins, one per switch (indices 0-3).
 SWITCH_PINS = [17, 18, 27, 22]
 
+# BCM-numbered GPIO output pins held at constant 3.3 V to power the switches.
+# Wire each output pin to one side of a switch, and the corresponding input
+# pin to the other side.
+SWITCH_OUTPUT_PINS = [2, 3, 4, 14]
+
 
 def main():
     pipeline = DataPipeline()
@@ -28,7 +33,7 @@ def main():
     # pipeline.register_receiver(LogDataReceiver())
 
     # --- Switch monitor ---
-    switches = SwitchMonitor(pins=SWITCH_PINS)
+    switches = SwitchMonitor(input_pins=SWITCH_PINS, output_pins=SWITCH_OUTPUT_PINS)
 
     switches.on_switch_up(0, lambda: print("Switch 0 up"))
     switches.on_switch_down(0, lambda: print("Switch 0 down"))
