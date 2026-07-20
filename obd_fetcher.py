@@ -1,5 +1,6 @@
 """obd_fetcher.py - attempts to fetch OBD data from the vehicle."""
 
+import logging
 import time
 import os
 from determine_gear import determine_gear
@@ -24,11 +25,19 @@ class ObdFetcher:
 
     def fetch_speed(self):
         resp_obj = self.conn.query(obd.commands.SPEED)
+        if not resp_obj.value:
+            logging.warning("Unable to capture vehicle speed.")
+            return None
+
         self.speed = float(resp_obj.value.to("mph").magnitude)
         return self.speed
 
     def fetch_rpm(self):
         resp_obj = self.conn.query(obd.commands.RPM)
+        if not resp_obj.value:
+            logging.warning("Unable to capture RPM.")
+            return None
+
         self.rpm = float(resp_obj.value.to("rpm").magnitude)
         return self.rpm
 
@@ -37,6 +46,10 @@ class ObdFetcher:
 
     def fetch_throttle(self):
         resp_obj = self.conn.query(obd.commands.THROTTLE_POS)
+        if not resp_obj.value:
+            logging.warning("Unable to determine throttle.")
+            return None
+
         return resp_obj.value.to("").magnitude
 
 
