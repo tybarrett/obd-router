@@ -16,7 +16,7 @@ class DataSource(ABC):
         self.rate_limit_hz = rate_limit_hz
 
     @abstractmethod
-    def fetch(self) -> dict | None:
+    def fetch(self):
         """
         Fetch the latest data from this source.
 

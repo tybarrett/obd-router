@@ -16,7 +16,7 @@ class OBDDataSource(DataSource):
         super().__init__(rate_limit_hz)
         self.obd = ObdFetcher()
 
-    def fetch(self) -> dict | None:
+    def fetch(self):
         speed = self.obd.fetch_speed()
         rpm = self.obd.fetch_rpm()
         gear = self.obd.fetch_gear()

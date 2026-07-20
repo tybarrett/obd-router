@@ -17,7 +17,7 @@ class SpotifyDataSource(DataSource):
         super().__init__(rate_limit_hz)
         self.spotify = SpotifyStatusFetcher()
 
-    def fetch(self) -> dict | None:
+    def fetch(self):
         state = self.spotify.fetch_player_state()
 
         if state is None:
