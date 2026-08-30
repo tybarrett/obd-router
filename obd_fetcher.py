@@ -12,6 +12,7 @@ else:
     print("Starting to import obd at " + str(time.time()))
     t_start = time.time()
     import obd
+    # obd.logger.setLevel(obd.logging.DEBUG)
     print("Time to import obd: " + str(time.time() - t_start))
 
 
@@ -21,11 +22,11 @@ class ObdFetcher:
         self.rpm = 100
         self.speed = 1
 
-        self.conn = obd.OBD()
+        self.conn = obd.OBD(portstr="/dev/ttyUSB0", baudrate=115200, protocol="6")
 
     def fetch_speed(self):
         resp_obj = self.conn.query(obd.commands.SPEED)
-        if not resp_obj.value:
+        if resp_obj.value is None:
             logging.warning("Unable to capture vehicle speed.")
             return None
 

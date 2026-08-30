@@ -41,7 +41,7 @@ logger = logging.getLogger(__name__)
 
 # How long (ms) to ignore subsequent edges after the first one fires.
 # Typical mechanical switches settle within 10-50ms.
-_DEBOUNCE_MS = 50
+_DEBOUNCE_MS = 100
 
 
 class SwitchMonitor:
@@ -139,7 +139,7 @@ class SwitchMonitor:
 
         for pin in self._output_pins:
             GPIO.setup(pin, GPIO.OUT, initial=GPIO.HIGH)
-            logger.info("Output pin %d (BCM) set to constant HIGH (3.3 V)", pin)
+            logger.warning("Output pin %d (BCM) set to constant HIGH (3.3 V)", pin)
 
         for switch_index, pin in enumerate(self._pins):
             # Pull-down: pin reads LOW when switch is open (down).
@@ -149,11 +149,11 @@ class SwitchMonitor:
             # the correct value (classic Python loop-closure gotcha).
             GPIO.add_event_detect(
                 pin,
-                GPIO.BOTH,
+                GPIO.RISING,
                 callback=lambda channel, idx=switch_index: self._on_edge(channel, idx),
                 bouncetime=self._debounce_ms,
             )
-            logger.info(
+            logger.warning(
                 "Monitoring switch %d on GPIO pin %d (BCM)", switch_index, pin
             )
 
@@ -181,8 +181,11 @@ class SwitchMonitor:
         """
         state = GPIO.input(channel)
         direction = "up" if state == GPIO.HIGH else "down"
+        print("direction was " + direction)
+        print("we will consider it up.")
+        # direction = "up"
 
-        logger.debug("Switch %d on pin %d flipped %s", switch_index, channel, direction)
+        logger.warning("Switch %d on pin %d flipped %s", switch_index, channel, direction)
 
         with self._lock:
             callbacks = list(self._callbacks[switch_index][direction])
