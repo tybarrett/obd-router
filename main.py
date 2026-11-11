@@ -37,10 +37,10 @@ def main():
     # --- Switch monitor ---
     switches = SwitchPoller(input_pins=SWITCH_PINS, output_pins=SWITCH_OUTPUT_PINS)
 
-    switches.on_switch_up(0, lambda: spotify_data_source.spotify.change_player_state(SpotifyStatusFetcher.KICKSTART_MY_HEART_URI))
+    switches.on_switch_up(0, lambda: spotify_data_source.spotify.play_playlist_shuffled(SpotifyStatusFetcher.EUROBEAT_PLAYLIST_URI))
     switches.on_switch_down(0, lambda: print("Switch 0 down"))
 
-    switches.on_switch_up(1, lambda: spotify_data_source.spotify.change_player_state(SpotifyStatusFetcher.HEARTBEAT_URI))
+    switches.on_switch_up(1, lambda: spotify_data_source.spotify.play_playlist_shuffled(SpotifyStatusFetcher.WRONG_GENERATION_PLAYLIST_URI))
     switches.on_switch_down(1, lambda: print("Switch 1 down"))
 
     switches.on_switch_up(2, lambda: print("Switch 2 up"))
