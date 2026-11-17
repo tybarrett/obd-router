@@ -31,7 +31,8 @@ def main():
     pipeline.register_source(spotify_data_source)
 
     # --- Outputs ---
-    pipeline.register_receiver(SendDataReceiver())
+    send_data_receiver = SendDataReceiver()
+    pipeline.register_receiver(send_data_receiver)
     # pipeline.register_receiver(LogDataReceiver())
 
     # --- Switch monitor ---
@@ -46,8 +47,8 @@ def main():
     switches.on_switch_up(2, lambda: print("Switch 2 up"))
     switches.on_switch_down(2, lambda: print("Switch 2 down"))
 
-    switches.on_switch_up(3, lambda: print("Switch 3 up"))
-    switches.on_switch_down(3, lambda: print("Switch 3 down"))
+    switches.on_switch_up(3, lambda: send_data_receiver.ingest({"dyno": True}))
+    switches.on_switch_down(3, lambda: send_data_receiver.ingest({"dyno": False}))
 
     switches.start()
 
